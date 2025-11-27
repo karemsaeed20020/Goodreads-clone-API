@@ -12,6 +12,7 @@ namespace Goodreads.Application.Common.Interfaces
         IRepository<Book> Books { get; }
         IRepository<Genre> Genres { get; }
         IRepository<AuthorClaimRequest> AuthorClaimRequests { get; }
+        IRepository<ReadingProgress> ReadingPrgresses { get; }
         Task<int> SaveChangesAsync();
     }
 }

@@ -16,6 +16,7 @@ namespace Goodreads.Infrastructure.Repositories
         private IRepository<Genre>? _genresRepository;
         private IRepository<Book>? _bookRepository;
         private IRepository<AuthorClaimRequest>? _authorClaimRequestRepository;
+        private IRepository<ReadingProgress>? _readingProgressRepository;
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -26,6 +27,11 @@ namespace Goodreads.Infrastructure.Repositories
         public IRepository<Genre> Genres => _genresRepository ??= new GenericRepository<Genre>(_context);
         public IRepository<AuthorClaimRequest> AuthorClaimRequests => _authorClaimRequestRepository ??=
                                             new GenericRepository<AuthorClaimRequest>(_context);
+
+        //public IRepository<ReadingProgress> ReadingProgresses => _readingProgressRepository ??= new GenericRepository<ReadingProgress>(_context);
+
+        public IRepository<ReadingProgress> ReadingPrgresses => _readingProgressRepository ??= new GenericRepository<ReadingProgress>(_context);
+
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
         public void Dispose() => _context.Dispose();
     }
