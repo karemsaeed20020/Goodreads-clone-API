@@ -3,6 +3,7 @@ using Goodreads.Application.Common.Interfaces;
 using Goodreads.Application.Common.Responses;
 using Goodreads.Application.DTOs;
 using Goodreads.Application.Quotes.Commands.CreateQuote;
+using Goodreads.Application.Quotes.Commands.UpdateQuote;
 using Goodreads.Application.Quotes.Queries.GetQuoteById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,21 @@ namespace Goodreads.API.Controllers
             return result.Match(
             id => CreatedAtAction(nameof(GetQuoteById), new { id }, ApiResponse.Success("Quote created successfully")),
             failure => CustomResults.Problem(failure));
+        }
+        [HttpPut("{id}")]
+        [Authorize]
+        [EndpointSummary("Update a quote")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateQuoteRequest request)
+        {
+            var command = new UpdateQuoteCommand(id, request.Text, request.Tags);
+            var result = await mediator.Send(command);
+
+            return result.Match(
+                () => NoContent(),
+                failure => CustomResults.Problem(failure));
         }
     }
 }
