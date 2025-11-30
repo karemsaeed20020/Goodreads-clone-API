@@ -4,6 +4,7 @@ using Goodreads.Application.Common.Responses;
 using Goodreads.Application.DTOs;
 using Goodreads.Application.Quotes.Commands.CreateQuote;
 using Goodreads.Application.Quotes.Commands.UpdateQuote;
+using Goodreads.Application.Quotes.Queries.GetAllQuotes;
 using Goodreads.Application.Quotes.Queries.GetQuoteById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,14 @@ namespace Goodreads.API.Controllers
     [ApiController]
     public class QuotesController(IMediator mediator, IUserContext userContext) : ControllerBase
     {
+        [HttpGet]
+        [EndpointSummary("Get all quotes")]
+        [ProducesResponseType(typeof(PagedResult<QuoteDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetQuotes([FromQuery] QueryParameters parameters, string? Tag, string? UserId, string? AuthorId, string? BookId)
+        {
+            var result = await mediator.Send(new GetAllQuotesQuery(parameters, Tag, UserId, AuthorId, BookId));
+            return Ok(result);
+        }
         [HttpGet("{id}")]
         [EndpointSummary("Get quote by ID")]
         [ProducesResponseType(typeof(ApiResponse<QuoteDto>), StatusCodes.Status200OK)]
