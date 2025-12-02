@@ -2,6 +2,8 @@
 using Goodreads.Application.Common.Responses;
 using Goodreads.Application.DTOs;
 using Goodreads.Application.Shelves.Commands.CreateShelf;
+using Goodreads.Application.Shelves.Commands.DeleteShelf;
+using Goodreads.Application.Shelves.Commands.UpdateShelf;
 using Goodreads.Application.Shelves.Queries.GetShelfById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +41,31 @@ namespace Goodreads.API.Controllers
             var result = await mediator.Send(command);
             return result.Match(
                 id => CreatedAtAction(nameof(GetShelfById), new { id }, ApiResponse.Success("Shelf created successfully")),
+                failure => CustomResults.Problem(failure));
+        }
+        [HttpPut]
+        [Authorize]
+        [EndpointSummary("Update a shelf")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateShelf([FromBody] UpdateShelfCommand command)
+        {
+            var result = await mediator.Send(command);
+            return result.Match(
+                () => NoContent(),
+                failure => CustomResults.Problem(failure));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        [EndpointSummary("Delete a shelf")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteShelf(string id)
+        {
+            var result = await mediator.Send(new DeleteShelfCommand(id));
+            return result.Match(
+                () => NoContent(),
                 failure => CustomResults.Problem(failure));
         }
 
