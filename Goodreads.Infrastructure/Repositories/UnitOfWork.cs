@@ -16,6 +16,8 @@ namespace Goodreads.Infrastructure.Repositories
         private IRepository<Genre>? _genresRepository;
         private IRepository<Book>? _bookRepository;
         private IRepository<AuthorClaimRequest>? _authorClaimRequestRepository;
+        private IRepository<Shelf>? _shelfRepository;
+        private IRepository<BookShelf>? _bookShelfRepository;
         private IRepository<ReadingProgress>? _readingProgressRepository;
         private IRepository<UserYearChallenge>? _userYearChallengeRepository;
         private IRepository<Quote>? _quoteRepository;
@@ -37,9 +39,8 @@ namespace Goodreads.Infrastructure.Repositories
         public IRepository<UserYearChallenge> UserYearChallenges => _userYearChallengeRepository ??= new GenericRepository<UserYearChallenge>(_context);
         public IRepository<Quote> Quotes => _quoteRepository ??= new GenericRepository<Quote>(_context);
         public IRepository<QuoteLike> QuoteLikes => _quoteLikeRepository ??= new GenericRepository<QuoteLike>(_context);
-        public IRepository<Shelf> Shelves => throw new NotImplementedException();
-
-        public IRepository<BookShelf> BookShelves => throw new NotImplementedException();
+        public IRepository<Shelf> Shelves => _shelfRepository ??= new GenericRepository<Shelf>(_context);
+        public IRepository<BookShelf> BookShelves => _bookShelfRepository ??= new GenericRepository<BookShelf>(_context);
 
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
         public void Dispose() => _context.Dispose();
