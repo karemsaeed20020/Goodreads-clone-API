@@ -19,9 +19,12 @@ namespace Goodreads.Domain.Entities
         public string? Country { get; set; } = default!;
         public Social Social { get; set; } = default!;
         public Author? ClaimedAuthorProfile { get; set; }
-
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        // Navigation properties - make sure these exist
+        public virtual ICollection<UserFollow> Followers { get; set; } = new List<UserFollow>();
+        public virtual ICollection<UserFollow> Following { get; set; } = new List<UserFollow>();
+        public ICollection<QuoteLike> LikedQuotes { get; set; } = new List<QuoteLike>();
+
     }
 
     public class Social

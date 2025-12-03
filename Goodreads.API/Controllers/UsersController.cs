@@ -1,0 +1,56 @@
+﻿using Goodreads.API.Common;
+using Goodreads.Application.Common.Responses;
+using Goodreads.Application.DTOs;
+using Goodreads.Application.Users.Queries.GetAllUsers;
+using Goodreads.Application.Users.Queries.GetUserProfile;
+using Goodreads.Application.Users.Queries.GetUserSocials;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SharedKernel;
+
+namespace Goodreads.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController(IMediator mediator) : ControllerBase
+    {
+        [HttpGet("me")]
+        [Authorize]
+        [EndpointSummary("Get current user profile")]
+        [ProducesResponseType(typeof(ApiResponse<UserProfileDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCurrentUserProfile()
+        {
+            var result = await mediator.Send(new GetUserProfileQuery());
+
+            return result.Match(
+                   profile => Ok(ApiResponse<UserProfileDto>.Success(profile)),
+                   failure => CustomResults.Problem(failure));
+        }
+
+        [HttpGet("me/socials")]
+        [Authorize]
+        [EndpointSummary("Get current user social links")]
+        [ProducesResponseType(typeof(ApiResponse<SocialDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUserSocialLinks()
+        {
+            var result = await mediator.Send(new GetUserSocialsQuery());
+            return result.Match(
+                socials => Ok(ApiResponse<SocialDto>.Success(socials)),
+                failure => CustomResults.Problem(failure));
+        }
+        [HttpGet("search")]
+        [EndpointSummary("Get All Users with search")]
+        [ProducesResponseType(typeof(PagedResult<UserDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAllUsers([FromQuery] QueryParameters parameters)
+        {
+            var result = await mediator.Send(new GetAllUsersQuery(parameters));
+            return Ok(result);
+        }
+
+    }
+}
