@@ -1,6 +1,8 @@
 ﻿using Goodreads.API.Common;
 using Goodreads.Application.Common.Responses;
 using Goodreads.Application.DTOs;
+using Goodreads.Application.Users.Commands.ChangePassword;
+using Goodreads.Application.Users.Commands.UpdateSocials;
 using Goodreads.Application.Users.Queries.GetAllUsers;
 using Goodreads.Application.Users.Queries.GetUserProfile;
 using Goodreads.Application.Users.Queries.GetUserSocials;
@@ -42,6 +44,21 @@ namespace Goodreads.API.Controllers
                 socials => Ok(ApiResponse<SocialDto>.Success(socials)),
                 failure => CustomResults.Problem(failure));
         }
+        [HttpPut("me/socials")]
+        [Authorize]
+        [EndpointSummary("Update current user social links")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> UpdateSocialLinks([FromBody] UpdateSocialsCommand command)
+        {
+            var result = await mediator.Send(command);
+            return result.Match(
+                () => NoContent(),
+                failure => CustomResults.Problem(failure));
+        }
+
         [HttpGet("search")]
         [EndpointSummary("Get All Users with search")]
         [ProducesResponseType(typeof(PagedResult<UserDto>), StatusCodes.Status200OK)]
@@ -50,6 +67,20 @@ namespace Goodreads.API.Controllers
         {
             var result = await mediator.Send(new GetAllUsersQuery(parameters));
             return Ok(result);
+        }
+        [HttpPost("me/change-password")]
+        [Authorize]
+        [EndpointSummary("Change current user password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            var result = await mediator.Send(command);
+            return result.Match(
+                () => NoContent(),
+                failure => CustomResults.Problem(failure));
+
         }
 
     }
