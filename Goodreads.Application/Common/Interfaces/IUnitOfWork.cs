@@ -18,7 +18,7 @@ namespace Goodreads.Application.Common.Interfaces
         IRepository<UserYearChallenge> UserYearChallenges { get; }
         IRepository<Quote> Quotes { get; }
         IRepository<QuoteLike> QuoteLikes { get; }
-
+        IRepository<BookReview> BookReviews { get; }
         Task<int> SaveChangesAsync();
     }
 }

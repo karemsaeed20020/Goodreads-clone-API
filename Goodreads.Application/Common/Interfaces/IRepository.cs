@@ -24,6 +24,6 @@ namespace Goodreads.Application.Common.Interfaces
         void Delete(T entity);
 
         Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
-        Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>> filter, string[]? inclcuses = null);
+        Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>> filter, string[]? includes = null);
     }
 }
