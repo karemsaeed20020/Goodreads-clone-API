@@ -11,3 +11,30 @@
   </div>
 
 ---
+
+## Table of Contents
+
+- [Features](#features)
+- [Database Diagram](#database-diagram)
+- [Endpoints](#endpoints)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Background Jobs](#background-jobs)
+- [Health Checks](#health-checks)
+- [Contributing](#contributing)
+
+---
+
+## Features
+
+- User authentication & JWT-based authorization
+- Book, author, and review management
+- Reading progress tracking
+- Yearly reading challenges
+- Email Support
+- File uploads via Azure Blob Storage
+- Background jobs with Hangfire
+- Health checks and monitoring
+- Swagger/Scalar documentation
+
+---
